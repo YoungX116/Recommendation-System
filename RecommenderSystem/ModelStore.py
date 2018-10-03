@@ -31,8 +31,8 @@ class ModelStore(object):
 		else:
 			self.transientModels[key][memberId] = model
 
-	def getModel(self, key, memberId = None):
-		#send out the object of models to learning system
+	def getModel(self, key, memberId=None):
+		# send out the object of models to learning system
 		if memberId is None:
 			return self.persistModels[key]
 		else:
@@ -40,7 +40,12 @@ class ModelStore(object):
 			if memberId in transientModels:
 				return transientModels[memberId]
 			else:
+				# it means it is the first time we build the online model for this particular user
 				assert self.persistModels[self.CL_MODEL_KEY].trained
+				# since the online model we used is depending on the clustering model trained offline
+				# this assert is to make sure the clustering model is already trained.
+
+				# in this case, we create a new model for this user
 				return SimilarItemModel(self.persistModels[self.CL_MODEL_KEY])
 
 	def cleanOnlineModel(self):

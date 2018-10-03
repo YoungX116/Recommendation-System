@@ -12,6 +12,7 @@ class UserAnalyzer(object):
 			return ["anonymous", -1,  request]
 		elif request.userId in userActivityDB.index:
 			if userActivityDB[request.userId] >= 30:
+				# if the user has already rated more than 30 items, we call it an old user
 				return ["old", request.userId, request]
 			else:
 				return ["new", request.userId, request]
@@ -20,7 +21,7 @@ class UserAnalyzer(object):
 			# raise Exception("User Id not registered")
 
 	def analyzeAction(self, action):
-		if isinstance(action.userId,str):
+		if isinstance(action.userId, str):
 			return "anonymous"
 		else:
 			return "registered"

@@ -1,5 +1,5 @@
 # Database Interface
-# to simulate some database operations
+# to simulate database operations
 
 import os
 import pandas as pd
@@ -12,7 +12,8 @@ class DatabaseInterface(object):
 	HISTORY = "ratings.csv"
 	USER_FEATURE = "userFeature.csv"
 	ITEM_FEATURE = "itemFeature.csv"
-	INVENTORY = "inventory.csv" #in reality, inventory store all the representations, such as video link
+	INVENTORY = "inventory.csv"
+	#inventory store all the representations, such as video link in real life
 
 	HISTORY_KEY = "history"
 	USER_FEATURE_KEY = "user_feature"
@@ -37,10 +38,10 @@ class DatabaseInterface(object):
 			self.log.warning("the data base has already started")
 			# start a running engine is not permitted here since it will remove all unsaved data
 		else:
-			self.log.info("start the database engine...")
-			for tableName, tablePath in self.dbTable.iteritems():
+			self.log.info("start the database engine")
+			for tableName, tablePath in self.dbTable.items():
 				self.log.info("loading table %s..." % tableName)
-				self.connTable[tableName] = pd.read_csv(os.path.join(self.path, tablePath), index_col=0)
+				self.connTable[tableName] = pd.read_csv(os.path.join(self.path, tablePath), index_col=0, encoding='latin-1')
 
 			self.log.info("creating table user_activity...")
 			self.connTable[self.USER_ACTIVITY_KEY] = self.connTable["history"].groupby("user_id").size() # actually a series
@@ -65,12 +66,12 @@ if __name__ == "__main__":
 	connector = DatabaseInterface("DATA")
 	connector.startEngine()
 	df1 = connector.connTable["history"]
-	print df1.head()
+	print(df1.head())
 	df2 = connector.connTable["user_activity"]
-	print df2[10]
+	print(df2[10])
 	df3 = connector.connTable["item_feature"]
-	print df3.loc[:,"unknown":]
+	print(df3.loc[:,"unknown":])
 	df4 = connector.connTable["user_feature"]
-	print df4.loc[:,"age":]
-	print set(df1[df1.loc[:,"user_id"]==2].loc[:,"item_id"])
+	print(df4.loc[:,"age":])
+	print(set(df1[df1.loc[:,"user_id"]==2].loc[:,"item_id"]))
 
